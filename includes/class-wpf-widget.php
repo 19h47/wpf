@@ -82,6 +82,7 @@ class WPF_Widget extends WP_Widget {
 	  	
 	  	$title = apply_filters( 'wpf_widget_title', $instance['title'] );
 	  	$wpf_shortcode = apply_filters( 'wpf_widget_shortcode', $instance['shortcode'] );
+	  	
 	  	echo $args['before_widget'];
 
 	  	// Title
