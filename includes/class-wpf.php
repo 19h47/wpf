@@ -13,6 +13,15 @@
  * @subpackage wpf/includes
  */
 
+
+// exit if accessed directly
+if( ! defined( 'ABSPATH' ) ) exit;
+
+
+// check if class already exists
+if( ! class_exists( 'WPF' ) ) :
+
+
 /**
  * The core plugin class.
  *
@@ -26,7 +35,7 @@
  * @subpackage wpf/includes
  * @author     Jérémy Levron levronjeremy@19h47.fr
  */
- class WPF {
+class WPF {
 
  	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -38,6 +47,7 @@
 	 */
 	protected $loader;
 
+
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -46,6 +56,17 @@
 	 * @var 		string 			$plugin_name 		The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_name;
+
+
+    /**
+     * The post type name
+     *
+     * @since  1.0.0
+     * @access protected
+     * @var string $post_type_name The string used to identify the post type
+     */
+    protected $post_type_name;
+
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -72,6 +93,7 @@
         $this->define_custom_post_type_hooks();
 	}
 
+
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
@@ -95,15 +117,18 @@
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wpf-loader.php';
 
+
 		/**
          * The class responsible for defining all actions that occur in the admin area.
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wpf-admin.php';
 
+
         /**
          * The class responsible for defining all actions relating to metaboxes.
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wpf-admin-metabox.php';
+
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
@@ -111,10 +136,12 @@
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wpf-widget.php';
 
+
         /**
          * The class responsible for defining all shortcodes of the site.
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wpf-public-shortcode.php';
+
 
         /**
          * The class responsible for defining all custom post type.
@@ -123,6 +150,7 @@
 
 		$this->loader = new WPF_Loader();
 	}
+
 
 	/**
      * Register all of the hooks related to the admin area functionality
@@ -149,11 +177,33 @@
     	);
 
     	$this->loader->add_action( 'init', $plugin_custom_post_type, 'register_post_type' );
-    	// $this->loader->add_action( 'manage_edit-gallery', $plugin_custom_post_type, 'manage_edit-gallery' );
 
-    	$this->loader->add_filter( 'manage_gallery_posts_columns', $plugin_custom_post_type, 'gallery_columns' );
-        $this->loader->add_action( 'manage_gallery_posts_custom_column', $plugin_custom_post_type, 'gallery_manage_columns', 10, 2);
-        $this->loader->add_filter( 'post_updated_messages', $plugin_custom_post_type, 'custom_post_type_messages' );
+
+        /**
+         * Filters the columns displayed in the Posts list table for a the plugin post type.
+         */
+    	$this->loader->add_filter( 
+            'manage_' . $this->get_post_type_name() . '_posts_columns', 
+            $plugin_custom_post_type, 
+            $this->get_post_type_name() . '_columns' 
+        );
+
+
+        /**
+         * Fires for each custom column of a specific post type in the Posts list table.
+         */
+        $this->loader->add_action( 
+            'manage_' . $this->get_post_type_name() . '_posts_custom_column', 
+            $plugin_custom_post_type, 
+            $this->get_post_type_name() . '_manage_columns'
+        );
+
+
+        $this->loader->add_filter( 
+            'post_updated_messages', 
+            $plugin_custom_post_type, 
+            'custom_post_type_messages' 
+        );
     }
 
     /**
@@ -185,6 +235,7 @@
         $this->loader->add_action( 'deleted_post', $this, 'flush_widget_cache' );
         $this->loader->add_action( 'switch_theme', $this, 'flush_widget_cache' );
     }
+
 
     /**
      * Register all of the hooks related to shortcodes functionality
@@ -302,3 +353,7 @@
         return $this->post_type_name;
     }
 }
+
+// class_exists check
+endif;
+?>

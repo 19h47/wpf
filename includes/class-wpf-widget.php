@@ -9,6 +9,15 @@
  * @subpackage wpf/includes
  */
 
+
+// exit if accessed directly
+if( ! defined( 'ABSPATH' ) ) exit;
+
+
+// check if class already exists
+if( ! class_exists( 'WPF_Widget' ) ) :
+
+
 /**
  * The widget functionality of the plugin.
  *
@@ -16,16 +25,27 @@
  * @subpackage wpf/includes
  * @author     Jérémy Levron levronjeremy@19h47.fr
  */
-
 class WPF_Widget extends WP_Widget {
+
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since 		1.0.0
-	 * @access 		private
-	 * @var 		string 			$plugin_name 		The ID of this plugin.
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
 	private $plugin_name;
+
+
+	/**
+	 * The version of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $version    The current version of this plugin.
+	 */
+	private $version;
+
 	
 	/**
 	 * Register widget with WordPress.
@@ -46,64 +66,6 @@ class WPF_Widget extends WP_Widget {
 		parent::__construct( false, $name, $opts, $control );
 	}
 
-	/**
-	 * Back-end widget form.
-	 *
-	 * @see		WP_Widget::form()
-	 *
-	 * @uses	wp_parse_args
-	 * @uses	esc_attr
-	 * @uses	get_field_id
-	 * @uses	get_field_name
-	 * @uses	checked
-	 *
-	 * @param	array	$instance	Previously saved values from database.
-	 */
-	function form( $instance ) {
-
-	 	$wpf_title = __( 'Galerie', $this->plugin_name );
-	 	$wpf_shortcode = __( 'Sélectionner une galerie', $this->plugin_name );
-
-	 	if ( isset( $instance['title'] ) ) {
-	 		
-	 		$wpf_title = $instance['title'];
-	 	} 
-
-	 	if ( isset( $instance['shortcode'] ) ) {
-	 		
-	 		$wpf_shortcode = $instance['shortcode'];
-	 	} 
-
-	 	// Include title partial
-	 	include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-widget-title.php' );
-
-		global $wpf_posts;
-
-		$args = array(
-			'post_type' 		=> $this->post_type_name, 
-			'orderby' 			=> 'ASC', 
-			'posts_per_page' 	=> -1,
-			'post_status' 		=> 'publish'
-		);
-
-		$wpf_posts = new WP_Query( $args );
-
-		// If $wpf_posts have no post
-		if( ! $wpf_posts->have_posts() ) {
-			
-			$html  = '<p>';
-			$html .= esc_html__( 'Désolé ! Aucune galerie n\'a été trouvée.', $this->plugin_name );
-			$html .= '</p>';
-			
-			echo $html;
-
-			// And return
-			return;
-		} 
-		
-		// Include form partial
-		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-widget-form.php' );
-	}
 
 	/**
 	 * Front-end display of widget.
@@ -151,6 +113,69 @@ class WPF_Widget extends WP_Widget {
 	  	wp_reset_query();
   	}
 
+
+  	/**
+	 * Back-end widget form.
+	 *
+	 * @see		WP_Widget::form()
+	 *
+	 * @uses	wp_parse_args
+	 * @uses	esc_attr
+	 * @uses	get_field_id
+	 * @uses	get_field_name
+	 * @uses	checked
+	 *
+	 * @param	array	$instance	Previously saved values from database.
+	 */
+	function form( $instance ) {
+
+	 	$title = esc_html__( 'Galerie', $this->plugin_name );
+	 	$wpf_shortcode = __( 'Sélectionner une galerie', $this->plugin_name );
+
+	 	// If title instance is set
+	 	if ( ! empty( $instance['title'] ) ) {
+	 		
+	 		$title = $instance['title'];
+	 	} 
+
+	 	// If shortcode instance is set
+	 	if ( ! empty( $instance['shortcode'] ) ) {
+	 		
+	 		$wpf_shortcode = $instance['shortcode'];
+	 	} 
+
+	 	// Include title partial
+	 	include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-widget-title.php' );
+
+		global $wpf_posts;
+
+		$args = array(
+			'post_type' 		=> $this->post_type_name, 
+			'orderby' 			=> 'ASC', 
+			'posts_per_page' 	=> -1,
+			'post_status' 		=> 'publish'
+		);
+
+		$wpf_posts = new WP_Query( $args );
+
+		// If $wpf_posts have no post
+		if( ! $wpf_posts->have_posts() ) {
+			
+			$html  = '<p>';
+			$html .= esc_html__( 'Désolé ! Aucune galerie n\'a été trouvée.', $this->plugin_name );
+			$html .= '</p>';
+			
+			echo $html;
+
+			// And return
+			return;
+		} 
+		
+		// Include form partial
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-widget-form.php' );
+	}
+
+
   	/**
 	 * Sanitize widget form values as they are saved.
 	 *
@@ -164,8 +189,15 @@ class WPF_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
+		
 		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 		$instance['shortcode'] = sanitize_text_field( $new_instance['shortcode'] );
+
 		return $instance;
 	}
 } 
+
+
+// class_exists check
+endif;
+?>

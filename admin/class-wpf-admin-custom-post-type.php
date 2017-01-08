@@ -10,6 +10,15 @@
  * @subpackage wpf/includes
  */
 
+
+// exit if accessed directly
+if( ! defined( 'ABSPATH' ) ) exit;
+
+
+// check if class already exists
+if( ! class_exists( 'WPF_Admin_Custom_Post_Type' ) ) :
+
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -31,6 +40,7 @@ class WPF_Admin_Custom_Post_Type {
 	 */
 	private $plugin_name;
 
+
 	/**
 	 * The version of this plugin.
 	 *
@@ -39,6 +49,7 @@ class WPF_Admin_Custom_Post_Type {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
+
 
 	/**
 	 * Initialize the class and set its properties.
@@ -53,6 +64,7 @@ class WPF_Admin_Custom_Post_Type {
 		$this->version = $version;
 		$this->post_type_name = $post_type_name;
 	}
+
 
 	/**
 	 * Creates a new custom post type
@@ -100,6 +112,8 @@ class WPF_Admin_Custom_Post_Type {
 
         register_post_type( $this->post_type_name, $args );
 	}
+
+
 	/**
 	 * gallery_columns
 	 * 
@@ -115,14 +129,15 @@ class WPF_Admin_Custom_Post_Type {
         return $columns;
     }
 	
+
 	/**
-	 * gallery_manage_columns
+	 * Post type manage columns
 	 * 
 	 * @param  string $column
-	 * @param  int    $post
 	 */
-    public function gallery_manage_columns( $column, $post ) {
+    public function gallery_manage_columns( $column ) {
 
+    	// access to the global var $post
     	global $post;
 
         switch( $column ) {
@@ -134,8 +149,9 @@ class WPF_Admin_Custom_Post_Type {
         }
     }
 
+
     /**
-	 * custom_post_type_messages
+	 * Post type messages
 	 *
 	 * @param array $messages Existing post update messages.
 	 * @see https://www.sitepoint.com/wordpress-custom-post-types-notices-taxonomies/
@@ -168,3 +184,8 @@ class WPF_Admin_Custom_Post_Type {
 	    return $messages;
 	}
 }
+
+
+// class_exists check
+endif;
+?>

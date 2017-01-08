@@ -25,20 +25,21 @@
  * Domain Path:       /languages
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
+
+// exit if accessed directly
+if( ! defined( 'ABSPATH' ) ) exit;
  
-// Constant Variable
-// define( 'WPF_TEXT_DOMAIN', 'wpf' );
-// define( 'WPF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+// check if class already exists
+if( ! class_exists( 'WPF' ) ) :
+
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-wpf.php';
+
 
 /**
  * Begins execution of the plugin.
@@ -54,3 +55,8 @@ function run_WPF() {
 	$plugin->run();
 }
 run_WPF();
+
+// class_exists check
+endif;
+
+?>

@@ -28,6 +28,7 @@ class WPF_Admin_Metabox {
 	 */
 	private $plugin_name;
 
+
 	/**
 	 * The version of this plugin.
 	 *
@@ -36,6 +37,7 @@ class WPF_Admin_Metabox {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
+
 
 	/**
 	 * Initialize the class and set its properties.
