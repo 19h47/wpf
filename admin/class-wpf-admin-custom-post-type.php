@@ -73,7 +73,7 @@ class WPF_Admin_Custom_Post_Type {
 	 * @access 	public
 	 * @uses 	register_post_type()
 	 */
-	public static function register_post_type() {
+	public function register_post_type() {
 		
 		$labels = array(
 			'name' 					=> _x( 'Galerie', $this->plugin_name ),

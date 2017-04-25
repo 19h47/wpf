@@ -18,7 +18,7 @@
             photosetId: "",
             errorText: "Error generating gallery.",
             loadingSpeed: 38,
-            photosLimit: 30
+            photosLimit: 500
         },
         apiUrl = 'https://api.flickr.com/services/rest/',
         photos = [];
