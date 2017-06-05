@@ -9,6 +9,8 @@
  * @package    WPF
  * @subpackage wpf/includes
  */
+
+
 /**
  * The widget functionality of the plugin.
  *
@@ -17,7 +19,8 @@
  * @author     Jérémy Levron levronjeremy@19h47.fr
  */
 class WPF_Shortcode {
-		/**
+	
+	/**
 	 * The ID of this plugin.
 	 *
 	 * @since 		1.0.0
@@ -26,6 +29,7 @@ class WPF_Shortcode {
 	 */
 	private $plugin_name;
 	
+	
 	/**
 	 * Register widget with WordPress.
 	 */
@@ -33,9 +37,10 @@ class WPF_Shortcode {
 		
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-        $this->post_type_name = $post_type_name;
+        	$this->post_type_name = $post_type_name;
 	}
 
+	
 	/**
 	 * Register the stylesheets for the shortcode of the site.
 	 *
@@ -54,6 +59,7 @@ class WPF_Shortcode {
 			false
 		);
 
+		
 		/**
 		 * blueimp Gallery
 		 * 
@@ -66,6 +72,7 @@ class WPF_Shortcode {
 			false
 		);
 
+		
 		/**
 		 * Site
 		 */
@@ -75,6 +82,8 @@ class WPF_Shortcode {
 			false,
 			null
 		);
+		
+		
 		/**
 		 * Font Awesome 
 		 *
@@ -109,6 +118,7 @@ class WPF_Shortcode {
 			'', 
 			false
 		);
+		
 
 		/**
 		 * imagesLoaded
@@ -123,6 +133,7 @@ class WPF_Shortcode {
 			false, 
 			true 
 		);
+		
 
 		/**
 		 * blueimp Gallery
@@ -137,6 +148,7 @@ class WPF_Shortcode {
 			false, 
 			true 
 		);
+		
 
 		/**
 		 * jQuery Flickr Photoset
@@ -155,6 +167,7 @@ class WPF_Shortcode {
 			true 
 		);
 	}
+	
 
 	/**
 	 * add_shortcode description
@@ -162,19 +175,19 @@ class WPF_Shortcode {
 	 */
 	function add_shortcode( $gallery ) {
 
-	    if( ! isset( $gallery['id'] ) ) {
+	    	if( ! isset( $gallery['id'] ) ) {
 			echo "<div align='center' class='alert alert-danger'>" . __( 'Sorry! Invalid Flickr Album Shortcode Embedded', $this->plugin_name ) . "</div>";
 
 			return;
 		}
 
-	    ob_start();
+	    	ob_start();
 
 		// $args for WP_Query
 		$args = array(  
-			'p' 			=> $gallery['id'], 
+			'p' 		=> $gallery['id'], 
 			'post_type' 	=> $this->post_type_name, 
-			'orderby' 		=> 'ASC', 
+			'orderby' 	=> 'ASC', 
 			'post_status' 	=> 'publish'
 		);
 
